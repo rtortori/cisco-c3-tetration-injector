@@ -1,0 +1,8 @@
+{
+  "API_ENDPOINT" : "https://tet-cluster-fqdn",
+  "CREDENTIALS_FILE" : "tetration_api.json",
+  "PARENT_SCOPE": "59ecb99f497d4f45ffc6e669",
+  "PARENT_SCOPE_VRF_ID": 43,
+  "DEFAULT_SCOPE_ID": "59e4b74a497d4f36417521c2",
+  "SENSOR_CONFIG_PROF_ID": "5a2808d1755f025d8ccb4eb9"
+}

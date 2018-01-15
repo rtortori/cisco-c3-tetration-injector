@@ -164,7 +164,8 @@ hostname callout strategy configuration.<br>
 The name of your deployment will be reflected in the node names and will also be referenced within Tetration to
 setup scopes and filters.<br>
 
-The following are the required configuration steps to enable Tetration injector in CloudCenter:
+The following are the required configuration steps to enable Tetration injector in CloudCenter. The process is
+also documented in the Integration Video Resources section below:
 * Create a new external service
     * Add a logo, a name and a service ID
     * Configure a Start and Stop script as follows:

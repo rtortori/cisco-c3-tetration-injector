@@ -43,6 +43,8 @@ Connect to [dcloud](https://dcloud.cisco.com/ "Cisco dCloud") to access free lab
 (Openstack not supported at present time)
 - CloudCenter Repository should be writable using sftp
 - Repository password will be stored in clear text
+- In Tetration, you are required to have at least an existing scope bound with a VRF. 
+You are also required to preconfigure a sensor profile
 
 Tested platforms:
 - CloudCenter 4.8 CCO running Centos7 (virtual appliance downloaded from cisco.com) 
@@ -72,4 +74,89 @@ tet-sensor-2.0.2.17-1.el6-PLX.sensor.x86_64.rpm
 tet-sensor-2.0.2.17-1.el7-PLX.enforcer.x86_64.rpm
 tet-sensor-2.0.2.17-1.el7-PLX.sensor.x86_64.rpm
 ```
+ The sensor list will be downloaded by the deployed nodes in order to pick the right sensor based on user choice 
+ (Deep Visibility vs Deep Visibility with Enforcement) and target OS.<br>
+ 
+### Fetch required configuration details from Tetration
+Under the directory **support**, a few python scripts have been provided in order to fetch the required
+configuration item from Tetration.
+You are required to have a working Tetration API key file inside the same directory where you will run the scripts.
+This needs to be referenced in the CREDENTIALS_FILE. You will also need to specify your API_ENDPOINT
+#### Examples:
+Running the *get_soft_sens_profile.py* script will generate an output similar to the following (output truncated):
+```
+[...]
+    {
+        "auto_upgrade_opt_out": false, 
+        "cpu_quota_mode": 1, 
+        "cpu_quota_pct": 3, 
+        "cpu_quota_us": 30000, 
+        "created_at": 1512573137, 
+        "data_plane_disabled": false, 
+        "enable_pid_lookup": true, 
+        "enforcement_disabled": false, 
+        "id": "5a2808d1755f025d8ccb4eb9", 
+        "name": "c3-profile", 
+        "updated_at": 1512573137
+    }
+[...]
+```
+
+Identify your exiting sensor profile name and its ID (in the example: "id": "5a2808d1755f025d8ccb4eb9", 
+        "name": "c3-profile")
+<br>
+Running the *get_soft_sens_profile.py* script will generate an output similar to the following (output truncated):
+```
+[...]
+{
+        "child_app_scope_ids": [
+            "59f99b18755f023679cb4eb6"
+        ], 
+        "description": null, 
+        "dirty": false, 
+        "dirty_short_query": null, 
+        "filter_type": "AppScope", 
+        "id": "59e4b74a497d4f36417521c2", 
+        "name": "Default", 
+        "parent_app_scope_id": "", 
+        "policy_priority": 1, 
+        "priority": "001:Z", 
+        "query": {
+            "field": "vrf_id", 
+            "type": "eq", 
+            "value": 1
+        }, 
+        "short_name": "Default", 
+        "short_priority": 1, 
+        "short_query": {
+            "field": "vrf_id", 
+            "type": "eq", 
+            "value": 1
+        }, 
+        "vrf_id": 1
+    }, 
+[...]
+```
+
+Identify your Default scope ID and your parent scope ID (in the example: "id": "59e4b74a497d4f36417521c2", 
+        "name": "Default")
+
+### Configuration
+* Clone into your favourite C3 repository directory
+* Open the **scripts/tetinj-configuration.json** configuration file and fill with your setup details
+    * API_ENDPOINT is your target Tetration FQDN
+    * CREDENTIALS_FILE is your Tetration API key file
+    * PARENT_SCOPE is the ID of your parent scope. Use the support script to fetch the ID
+    * PARENT_SCOPE_VRF_ID is the numeric ID of your parent scope VRF (i.e. 43)
+    * DEFAULT_SCOPE_ID is the ID of your Default scope in Tetration. This is needed because some 
+    inventory filters will be created to steer sensors in the right VRF. Use the support script to fetch the
+    Default scope ID
+     **Note:** If you are using Remote VRF
+    to support NAT, this might be not required as the sensors will go automatically into the right VRF based
+    on their gateway IP
+    * SENSOR_CONFIG_PROF_ID is the ID of your sensor config profile. A new configuration intent will be 
+    created automatically and will be bound to an existing sensor configuration profile. Use the support
+    script to fetch the ID
+    
 ## To be continued :)
+ 

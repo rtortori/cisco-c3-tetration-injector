@@ -6,7 +6,15 @@ import os
 requests.packages.urllib3.disable_warnings()
 
 # Configuration file
-CONFIG_FILE = './tetinj-configuration.json'
+CONFIG_FILE_JSON = './tetinj-configuration.json'
+
+# Open the configuration file
+try:
+    CONFIG_FILE = json.load(open(CONFIG_FILE_JSON))
+except Exception:
+    print("Couldn't load the configuration file")
+    exit(1)
+
 
 # Fetching state JSON file
 STATE_FILENAME = os.environ['STATEFILE']

@@ -158,5 +158,43 @@ Identify your Default scope ID and your parent scope ID (in the example: "id": "
     created automatically and will be bound to an existing sensor configuration profile. Use the support
     script to fetch the ID
     
-## To be continued :)
- 
+## Cloudcenter configuration
+As specified in the prerequisites and caveats section, you will need to have a working setup with 
+hostname callout strategy configuration.<br>
+The name of your deployment will be reflected in the node names and will also be referenced within Tetration to
+setup scopes and filters.<br>
+
+The following are the required configuration steps to enable Tetration injector in CloudCenter:
+* Create a new external service
+    * Add a logo, a name and a service ID
+    * Configure a Start and Stop script as follows:
+        * Start: select your CloudCenter repository and reference the service_start.sh script. <br>Pay attention 
+        to the path
+        * Stop: select your CloudCenter repository and reference the service_stop.sh script. <br>Pay attention 
+        to the path
+    * Save the Tetration Injector service
+    * Open a new or existing application profile and drag into the topology panel the new Tetration 
+    Injector service. Create inter-dependencies so that Tetration Injector will be the first service to start. 
+    You will find it in the *Custom Service* folder
+    * Create a new global parameter called *TET_SENSOR_TYPE*, configure it as a list of elements and 
+    paste the following:<br>
+        > Deep Visibility,Deep Visibility with Enforcement<br>
+    
+        Specify a default value or leave it blank if you want to manually specify the sensor type
+        on each deployment.<br>
+        The parameter should be visible and editable by the user
+    * Click on each tier of the application profile and:
+        * Specify the sensor_install.sh script (with the 
+          correct path on the repo) under the *Post-Start Script* section
+        * Specify the sensor_uninstall.sh script (with the 
+          correct path on the repo) under the *Pre-Stop Script* section
+        * Under *Environment Variables*, create a new variable with Name: *TET_SENSOR_TYPE* and
+        Value: *%TET_SENSOR_TYPE%*<br>
+        Again, this needs to be editable and visible by the user. This variable will make the nodes 
+        carrying over the global parameter specified at deployment phase so it will know what sensor
+        to install
+    * Save your application profile and deploy! 
+    
+#### To do!
+* Add video tutorials for Cloudcenter configuration
+* Add AppD scripts

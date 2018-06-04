@@ -1,3 +1,5 @@
+# Warning: This repo has been moved to https://gitlab.com/rtortori/cisco-c3-tetration-injector.git
+
 # Tetration Analytics injector service for Cisco Cloudcenter
 **Disclaimer**: This is NOT an official Cisco application and comes with absolute NO WARRANTY!<br>
 It doesn't represent an official and production ready integration system but it's only a concept that highlights
